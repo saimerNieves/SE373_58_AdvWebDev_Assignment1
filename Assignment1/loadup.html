@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loaded info from chat</title>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body>
+
+    <br><center><h3>Output from Ajax Call to Server Reading Todo.json</h3></center><br>
+    <div class= "output"></div>
+
+    <br><center><h4>Jordan the data below is the same JSON data but formatted using Bootstrap tables</h4></center><br>
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">User Number</th>
+            <th scope="col">userID</th>
+            <th scope="col">id</th>
+            <th scope="col">Title</th>
+            <th scope="col">Completed</th>
+            
+          </tr>
+        </thead>
+        <tbody class="tbody-users">
+        </tbody>
+      </table>
+
+    <br/>
+    <br/>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script>
+        $(document).ready(function () {
+
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:3000/todo'
+            })
+            .done(function (data) {
+
+                console.log("Made it here")
+                let outputs = document.querySelector(".output");
+                outputs.innerText  = JSON.stringify(data)
+
+                const obj = data
+                console.log("OBJ"+obj)
+                console.log("Made it here 2")
+
+                console.log(JSON.stringify(obj[0]))
+                console.log(obj.length)
+
+                loadUsersToHTMLFunction(obj)
+            });
+        });
+
+        loadUsersToHTMLFunction = (obj)=>{
+
+            let tableBody = document.querySelector(".tbody-users");
+            let sizeOfJSONFile = obj.length
+
+            for (let i = 0; i < sizeOfJSONFile; i++){
+
+            //         <tr>
+            //     <th scope="row">1</th>
+            //     <td>Mark</td>
+            //     <td>Otto</td>
+            //     <td>@mdo</td>
+            //   </tr>
+
+                let tr_element = document.createElement("tr");
+                let th_element = document.createElement("th");
+                let td_userID_element = document.createElement("td");
+                let td_ID_element = document.createElement("td");
+                let td_Title_element = document.createElement("td");
+                let td_Completed_element = document.createElement("td");
+
+
+
+                th_element.setAttribute("scope","row")
+                th_element.innerText = i + 1;
+
+                td_userID_element.innerText = JSON.stringify(obj[i]["userId"])
+                td_ID_element.innerText = JSON.stringify(obj[i]["id"])
+                td_Title_element.innerText = JSON.stringify(obj[i]["title"])
+                td_Completed_element.innerText = JSON.stringify(obj[i]["completed"])
+
+                tr_element.appendChild(th_element)
+                tr_element.appendChild(td_userID_element)
+                tr_element.appendChild(td_ID_element)
+                tr_element.appendChild(td_Title_element)
+                tr_element.appendChild(td_Completed_element)
+
+                tableBody.appendChild(tr_element)
+
+                console.log("here " + JSON.stringify(obj[i]["id"]))
+            }
+        } 
+    </script>
+</body>
+</html>
